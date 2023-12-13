@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /sample
+spring:
+  jpa:
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db.migration # locations of DB scripts
+    out-of-order: false
+application:
+  zone-id: "Asia/Singapore"

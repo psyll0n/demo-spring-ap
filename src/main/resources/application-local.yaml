@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sample?serverTimezone=${application.zone-id}
+    username: root
+    password: "password"
+    hibernate.ddl-auto: none # set to update to auto update the schema of the tables in the database
+    show-sql: true # should be disabled in production, bad for performance
+    properties:
+      hibernate:
+        format-sql: false # should be disabled in production, bad for performance
+        generate_statistics: false
+        jdbc:
+          batch_size: 30 # to ensure bulk insert for better performance
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
