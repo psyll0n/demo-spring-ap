@@ -6,6 +6,9 @@ import com.api.sample.model.command.FindAsPageQueryCommand;
 import com.api.sample.model.response.StandardResponse;
 import com.api.sample.model.response.TaskDTO;
 import com.api.sample.service.BaseService;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class GetTasksService implements
     BaseService<FindAsPageQueryCommand, StandardResponse<PagedResult<TaskDTO>>> {
 
@@ -31,7 +35,12 @@ public class GetTasksService implements
     // From user POV, page number starts from 1, but for Spring Data JPA page number starts from 0.
     int pageNo = queryCommand.pageNo() > 0 ? queryCommand.pageNo() - 1 : 0;
     Pageable pageable = PageRequest.of(pageNo, queryCommand.pageSize(), sort);
-    Page<TaskDTO> page = taskRepository.findTasks(pageable);
+
+    Instant from = queryCommand.from().atStartOfDay(ZoneOffset.UTC).toInstant();
+    Instant to = queryCommand.to().atStartOfDay(ZoneOffset.UTC).toInstant();
+    log.info("From: {} ~ To: {}", from, to);
+
+    Page<TaskDTO> page = taskRepository.findTasks(pageable, from, to);
     var result = new PagedResult<>(
         page.getContent(),
         page.getTotalElements(),

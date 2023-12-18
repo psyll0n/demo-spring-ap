@@ -12,6 +12,7 @@ import com.api.sample.model.request.CreateTaskRequest;
 import com.api.sample.model.request.UpdateTaskRequest;
 import com.api.sample.model.response.StandardResponse;
 import com.api.sample.model.response.TaskDTO;
+import java.time.LocalDate;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -64,8 +65,10 @@ public class TaskController {
   @GetMapping
   StandardResponse<PagedResult<TaskDTO>> getTasks(
       @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
-      @RequestParam(name = "size", defaultValue = "10") Integer pageSize) {
-    var findAsPageQueryCommand = new FindAsPageQueryCommand(pageNo, pageSize);
+      @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
+      @RequestParam(name = "from", defaultValue = "2023-12-15") LocalDate from,
+      @RequestParam(name = "to", defaultValue = "2023-12-20") LocalDate to) {
+    var findAsPageQueryCommand = new FindAsPageQueryCommand(pageNo, pageSize, from, to);
     return getTasksService.execute(findAsPageQueryCommand);
   }
 
