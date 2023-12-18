@@ -25,7 +25,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Testcontainers
-public class TaskControllerTests {
+class TaskControllerTests {
 
   @Container
   @ServiceConnection
@@ -62,6 +62,35 @@ public class TaskControllerTests {
         .body("data.hasPrevious", equalTo(false));
   }
 
+  @Test
+  void shouldGetTaskByIdSuccessfully() {
+    // Create a task
+    CreateTaskRequest request = new CreateTaskRequest("Test", "Testing");
+    TaskDTO taskDTO = createTaskService.execute(request).getData();
+
+    given().contentType(ContentType.JSON)
+        .when()
+        .get("/sample/tasks/{id}", taskDTO.id())
+        .then()
+        .statusCode(200)
+        .body("statusCode", equalTo("5000"))
+        .body("message", equalTo("Request successfully processed"))
+        .body("data.id", notNullValue())
+        .body("data.title", equalTo("Test"))
+        .body("data.description", equalTo("Testing"))
+        .body("data.createdAt", notNullValue())
+        .body("data.updatedAt", nullValue());
+
+  }
+  @Test
+  void shouldGet404WhenTaskNotExists() {
+    Long nonExistingId = 99999L;
+    given().contentType(ContentType.JSON)
+        .when()
+        .get("/api/bookmarks/{id}", nonExistingId)
+        .then()
+        .statusCode(404);
+  }
   @Test
   void shouldCreateTaskSuccessfully() {
     given().contentType(ContentType.JSON)
@@ -103,6 +132,29 @@ public class TaskControllerTests {
         )
         .when()
         .put("/sample/tasks/{id}", taskDTO.id())
+        .then()
+        .statusCode(200)
+        .body("statusCode", equalTo("5000"))
+        .body("message", equalTo("Request successfully processed"));
+  }
+
+  @Test
+  void shouldDeleteTaskSuccessfully() {
+    // Create a task
+    CreateTaskRequest request = new CreateTaskRequest("Test", "Testing");
+    TaskDTO taskDTO = createTaskService.execute(request).getData();
+
+    given().contentType(ContentType.JSON)
+        .body(
+            """
+                {
+                "title": "Test Updated",
+                "description": "Updating"
+                }
+                """
+        )
+        .when()
+        .delete("/sample/tasks/{id}", taskDTO.id())
         .then()
         .statusCode(200)
         .body("statusCode", equalTo("5000"))

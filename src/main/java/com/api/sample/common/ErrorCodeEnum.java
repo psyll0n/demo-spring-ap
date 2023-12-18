@@ -9,7 +9,7 @@ package com.api.sample.common;
 public enum ErrorCodeEnum implements BaseCodeEnum {
 
   // Task related errors
-  ERR_1000_TASK_CHECK("1000", "Task: Sign-in failed");
+  ERR_1000_TASK_NOT_FOUND("1000", "Task Not found");
 
   private final String statusCode;
   private final String errorMessage;
