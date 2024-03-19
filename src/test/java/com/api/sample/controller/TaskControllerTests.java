@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.api.sample.domain.task.CreateTaskService;
-import com.api.sample.model.request.CreateTaskRequest;
+import com.api.sample.model.command.CreateTaskCommand;
 import com.api.sample.model.response.TaskDTO;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -65,7 +65,7 @@ class TaskControllerTests {
   @Test
   void shouldGetTaskByIdSuccessfully() {
     // Create a task
-    CreateTaskRequest request = new CreateTaskRequest("Test", "Testing");
+    CreateTaskCommand request = new CreateTaskCommand("Test", "Testing");
     TaskDTO taskDTO = createTaskService.execute(request).getData();
 
     given().contentType(ContentType.JSON)
@@ -82,6 +82,7 @@ class TaskControllerTests {
         .body("data.updatedAt", nullValue());
 
   }
+
   @Test
   void shouldGet404WhenTaskNotExists() {
     Long nonExistingId = 99999L;
@@ -91,6 +92,7 @@ class TaskControllerTests {
         .then()
         .statusCode(404);
   }
+
   @Test
   void shouldCreateTaskSuccessfully() {
     given().contentType(ContentType.JSON)
@@ -118,7 +120,7 @@ class TaskControllerTests {
   @Test
   void shouldUpdateTaskSuccessfully() {
     // Create a task
-    CreateTaskRequest request = new CreateTaskRequest("Test", "Testing");
+    CreateTaskCommand request = new CreateTaskCommand("Test", "Testing");
     TaskDTO taskDTO = createTaskService.execute(request).getData();
 
     given().contentType(ContentType.JSON)
@@ -141,7 +143,7 @@ class TaskControllerTests {
   @Test
   void shouldDeleteTaskSuccessfully() {
     // Create a task
-    CreateTaskRequest request = new CreateTaskRequest("Test", "Testing");
+    CreateTaskCommand request = new CreateTaskCommand("Test", "Testing");
     TaskDTO taskDTO = createTaskService.execute(request).getData();
 
     given().contentType(ContentType.JSON)

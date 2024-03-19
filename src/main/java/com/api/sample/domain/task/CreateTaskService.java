@@ -1,9 +1,9 @@
 package com.api.sample.domain.task;
 
 import com.api.sample.common.StatusCodeEnum;
-import com.api.sample.model.request.CreateTaskRequest;
-import com.api.sample.model.response.TaskDTO;
+import com.api.sample.model.command.CreateTaskCommand;
 import com.api.sample.model.response.StandardResponse;
+import com.api.sample.model.response.TaskDTO;
 import com.api.sample.service.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CreateTaskService implements
-    BaseService<CreateTaskRequest, StandardResponse<TaskDTO>> {
+    BaseService<CreateTaskCommand, StandardResponse<TaskDTO>> {
 
   private final TaskRepository taskRepository;
 
@@ -20,7 +20,7 @@ public class CreateTaskService implements
   }
 
   @Override
-  public StandardResponse<TaskDTO> execute(CreateTaskRequest input) {
+  public StandardResponse<TaskDTO> execute(CreateTaskCommand input) {
     Task task = new Task();
     task.setTitle(input.title());
     task.setDescription(input.description());

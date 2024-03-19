@@ -6,6 +6,7 @@ import com.api.sample.domain.task.GetTaskService;
 import com.api.sample.domain.task.GetTasksService;
 import com.api.sample.domain.task.UpdateTaskService;
 import com.api.sample.entity.PagedResult;
+import com.api.sample.model.command.CreateTaskCommand;
 import com.api.sample.model.command.FindAsPageQueryCommand;
 import com.api.sample.model.command.UpdateTaskCommand;
 import com.api.sample.model.request.CreateTaskRequest;
@@ -50,8 +51,9 @@ public class TaskController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   StandardResponse<TaskDTO> createTask(
-      @RequestBody @Validated CreateTaskRequest input) {
-    return createTaskService.execute(input);
+      @RequestBody @Validated CreateTaskRequest request) {
+    var createTaskCommand = new CreateTaskCommand(request.title(), request.description());
+    return createTaskService.execute(createTaskCommand);
   }
 
   @PutMapping("/{id}")
