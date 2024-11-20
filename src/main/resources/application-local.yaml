@@ -3,6 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/sample?serverTimezone=${application.zone-id}
     username: root
     password: "password"
+  jpa:
     hibernate.ddl-auto: none # set to update to auto update the schema of the tables in the database
     show-sql: true # should be disabled in production, bad for performance
     properties:
